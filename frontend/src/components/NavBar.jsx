@@ -25,11 +25,18 @@ const NavBar = () => {
                         </NavLink>
                     </div>
 
-                    <div className="hidden md:flex space-x-8">
-                        <NavLink to="/" className="hover:bg-blue-700 px-3 py-2 rounded-md">Home</NavLink>
-                        <NavLink to="/about" className="hover:bg-blue-700 px-3 py-2 rounded-md">About</NavLink>
-                        <NavLink to="/services" className="hover:bg-blue-700 px-3 py-2 rounded-md">Services</NavLink>
-                        <NavLink to="/contact" className="hover:bg-blue-700 px-3 py-2 rounded-md">Contact</NavLink>
+                    <div className="hidden md:flex space-x-8 font-semibold text-lg">
+                        <NavLink to="/" className="hover:bg-blue-300 px-3 py-2 rounded-md">Home</NavLink>
+                        <NavLink to="/about" className="hover:bg-blue-300 px-3 py-2 rounded-md">About</NavLink>
+                        <NavLink to="/services" className="hover:bg-blue-300 px-3 py-2 rounded-md">Services</NavLink>
+                        <NavLink to="/contact" className="hover:bg-blue-300 px-3 py-2 rounded-md">Contact</NavLink>
+                        {isLoggedIn && (
+                            <div onClick={handleLogout}>
+                                <NavLink to="/login" className="block px-3 py-2 rounded-md font-semibold hover:bg-red-600 text-lg">
+                                    Logout
+                                </NavLink>
+                            </div>
+                        )}
                     </div>
 
                     {/* Show Login button if user is not logged in */}
@@ -83,7 +90,7 @@ const NavBar = () => {
                     <NavLink to="/about" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
                         About
                     </NavLink>
-                    <NavLink to="/contact" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
+                    <NavLink to="/conta3t" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
                         Contact
                     </NavLink>
                     <NavLink to="/services" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
