@@ -7,7 +7,7 @@ export const uploadBp = async (req, res) => {
         }
 
         // Upload the file to Cloudinary
-        const result = await cloudinary.uploader.upload_stream(
+        const result = cloudinary.uploader.upload_stream(
             { folder: 'blueprints' },
             (error, result) => {
                 if (error) return res.status(500).json({ error: 'Upload to Cloudinary failed' });

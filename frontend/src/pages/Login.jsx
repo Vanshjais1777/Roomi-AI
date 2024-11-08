@@ -23,7 +23,6 @@ const Login = () => {
         e.preventDefault();
         try {
             const response = await axios.post(backendUrl + '/api/users/login', { email, password });
-            console.log('Login Successful:', response.data);
             localStorage.setItem('token', response.data.token);
             login();
             navigate("/");

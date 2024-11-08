@@ -12,12 +12,13 @@ import vintage from '../assets/vintage.png';
 import NavBar from '../components/NavBar';
 import { AuthContext } from '../context/authContext';
 import { useNavigate } from 'react-router-dom';
-
+import axios from 'axios';
+import { BackendUrlContext } from '../context/BackendUrlContext';
 const UploadBlueprint = () => {
 
     const { isLoggedIn } = useContext(AuthContext);
+    const backendUrl = useContext(BackendUrlContext);
     const navigate = useNavigate();
-
     const handleButtonClick = async () => {
         try {
             if (isLoggedIn) {
@@ -32,6 +33,13 @@ const UploadBlueprint = () => {
                 });
 
                 const file = await fileHandle.getFile();
+                const formData = new FormData();
+                formData.append('image', file);
+
+                const response = await axios.post(backendUrl + "/api/uploads/uploadBp", formData, {
+                    headers: { 'Content-Type': 'multipart/form-data' },
+                });
+                console.log("Upload success");
             } else if (!isLoggedIn) {
                 navigate("/login");
             }
