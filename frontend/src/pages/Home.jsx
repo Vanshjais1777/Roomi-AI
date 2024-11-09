@@ -15,10 +15,10 @@ const Home = () => {
   const { isLoggedIn } = useContext(AuthContext);
 
   const redirectToBpUpload = () => {
-    if (!isLoggedIn) {
-      navigate("/login");
-    } else {
+    if (isLoggedIn) {
       navigate("/uploadBp");
+    } else {
+      navigate("/login");
     }
   };
 
