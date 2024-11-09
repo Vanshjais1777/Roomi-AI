@@ -1,18 +1,31 @@
-import React, { useContext, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
+import { useClerk, useUser } from '@clerk/clerk-react';
 
 const NavBar = () => {
     const [isOpen, setIsOpen] = useState(false);
-    const { isLoggedIn, logout } = useContext(AuthContext);
+    const { signOut } = useClerk();
+    const { isSignedIn, user } = useUser(); // Access user details
     const navigate = useNavigate();
+    const clerk = useClerk();
 
     const handleLogout = () => {
-        logout();
+        signOut();
+        navigate('/');
     };
 
+    // Mobile menu toggle
     const toggleMenu = () => {
-        setIsOpen(!isOpen);
+        setIsOpen(!isOpen); // Toggle the mobile menu
+    };
+
+    // Login function
+    const handleLogin = () => {
+        if (clerk) {
+            clerk.openSignIn(); // Open Clerk's sign-in page
+        } else {
+            console.error('Clerk instance is not available.');
+        }
     };
 
     return (
@@ -30,9 +43,11 @@ const NavBar = () => {
                         <NavLink to="/about" className="hover:bg-blue-300 px-3 py-2 rounded-md">About</NavLink>
                         <NavLink to="/services" className="hover:bg-blue-300 px-3 py-2 rounded-md">Services</NavLink>
                         <NavLink to="/contact" className="hover:bg-blue-300 px-3 py-2 rounded-md">Contact</NavLink>
-                        {isLoggedIn && (
+
+                        {/* Show Logout button if logged in */}
+                        {isSignedIn && (
                             <div onClick={handleLogout}>
-                                <NavLink to="/login" className="block px-3 py-2 rounded-md font-semibold hover:bg-red-600 text-lg">
+                                <NavLink to="/" className="block px-3 py-2 rounded-md font-semibold hover:bg-red-600 text-lg">
                                     Logout
                                 </NavLink>
                             </div>
@@ -40,12 +55,11 @@ const NavBar = () => {
                     </div>
 
                     {/* Show Login button if user is not logged in */}
-                    {!isLoggedIn && (
+                    {!isSignedIn && (
                         <div className='bg-blue-700 text-white py-1.5 px-4 rounded-lg ml-24 font-semibold'>
-                            <button onClick={() => navigate("/login")}>Login</button>
+                            <button onClick={handleLogin}>Login</button>
                         </div>
                     )}
-
 
                     <div className="md:hidden flex items-center">
                         <button
@@ -81,32 +95,30 @@ const NavBar = () => {
             </div>
 
             {/* Mobile Menu */}
-            {/* Mobile Menu */}
             <div className={`${isOpen ? "block" : "hidden"} md:hidden bg-white z-50 absolute top-20 left-0 w-full transition-all`}>
                 <div className="space-y-1 px-2 pt-2 pb-3">
-                    <NavLink to="/" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
+                    <NavLink to="/" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-300">
                         Home
                     </NavLink>
-                    <NavLink to="/about" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
+                    <NavLink to="/about" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-300">
                         About
                     </NavLink>
-                    <NavLink to="/conta3t" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
+                    <NavLink to="/contact" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-300">
                         Contact
                     </NavLink>
-                    <NavLink to="/services" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-400">
+                    <NavLink to="/services" className="block px-3 py-2 rounded-md text-base font-medium hover:bg-blue-300">
                         Services
                     </NavLink>
                     {/* Show Logout button only if logged in */}
-                    {isLoggedIn && (
+                    {isSignedIn && (
                         <div onClick={handleLogout}>
-                            <NavLink to="/login" className="block px-3 py-2 rounded-md font-bold hover:bg-blue-700 text-lg">
+                            <NavLink to="/" className="block px-3 py-2 rounded-md font-bold hover:bg-blue-300 text-lg">
                                 Logout
                             </NavLink>
                         </div>
                     )}
                 </div>
             </div>
-
         </nav>
     );
 };

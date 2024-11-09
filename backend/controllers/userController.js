@@ -1,40 +1,38 @@
 import User from '../models/User.js'; // Import the User model
-import pkg from 'bcryptjs';
-const { hash, compare } = pkg;
 import jwt from 'jsonwebtoken';
 
-// Register a new user
+// Register a new user (Clerk-based)
 export const registerUser = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { email, username, clerkId } = req.body;
 
     try {
-        // Check if the user already exists
-        const existingUser = await User.findOne({ email });
+        // Check if the user already exists by clerkId
+        const existingUser = await User.findOne({ clerkId });
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const hashedPassword = await hash(password, 10);
-        const user = new User({ username, email, password: hashedPassword });
+        // Create a new user object
+        const user = new User({ email, username, clerkId });
+
         await user.save(); // Save the user to the database
         res.status(201).json({ message: 'User created successfully', user });
     } catch (error) {
-        res.status(500).json({ message: 'Error creating user', error });
+        console.error('Registration Error:', error);
+        res.status(500).json({ message: 'Error creating user', error: error.message });
     }
 };
 
-// User login
+// User login (Clerk-based)
 export const loginUser = async (req, res) => {
-    const { email, password } = req.body;
+    const { clerkId } = req.body;
 
     try {
-        const user = await User.findOne({ email });
+        // Find user by Clerk ID
+        const user = await User.findOne({ clerkId });
         if (!user) return res.status(404).json({ message: 'User not found' });
 
-        const isMatch = await compare(password, user.password);
-
-        if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
-
+        // Generate a JWT token
         const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
         res.status(200).json({ token });
     } catch (error) {
@@ -42,4 +40,3 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ message: 'Error logging in', error: error.message });
     }
 };
-
