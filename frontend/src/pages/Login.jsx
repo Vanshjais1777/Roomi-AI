@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { BackendUrlContext } from '../context/BackendUrlContext';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../context/AuthContext';
 import { SignIn, useUser } from '@clerk/clerk-react';
 import axios from 'axios';
 
