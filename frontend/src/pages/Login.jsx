@@ -33,7 +33,7 @@ const Login = () => {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-blue-500 p-6">
-            <SignIn path='/login' routing='path' signUpUrl='/signup' />
+            <SignIn path='/sign-in' routing='path' signUpUrl='/sign-up' />
         </div>
     );
 };

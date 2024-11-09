@@ -9,10 +9,10 @@ const publishableKey = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 
 createRoot(document.getElementById('root')).render(
   <BackendUrlProvider>
-    <AuthProvider>
-      <ClerkProvider publishableKey={publishableKey}>
+    <ClerkProvider publishableKey={publishableKey}>
+      <AuthProvider>
         <App />
-      </ClerkProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </ClerkProvider>
   </BackendUrlProvider>,
 )

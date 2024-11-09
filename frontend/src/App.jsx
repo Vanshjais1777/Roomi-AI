@@ -18,8 +18,8 @@ const App = () => {
           <Routes>
             {/* Define Routes for your pages */}
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
+            <Route path="/sign-in" element={<Login />} />
+            <Route path="/sign-up" element={<Signup />} />
             <Route path="/uploadBp" element={<UploadBlueprint />} />
             <Route path="/designsugg" element={<DesignSuggestions />} />
             <Route path="/about" element={<AboutUs />} />

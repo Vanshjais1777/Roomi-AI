@@ -13,12 +13,12 @@ import TypingEffect from 'react-typing-effect'; // Import the typing effect libr
 const Home = () => {
   const navigate = useNavigate();
   const { isLoggedIn } = useContext(AuthContext);
-
+  
   const redirectToBpUpload = () => {
     if (isLoggedIn) {
       navigate("/uploadBp");
     } else {
-      navigate("/login");
+      navigate("/sign-in");
     }
   };
 
@@ -42,10 +42,10 @@ const Home = () => {
         </span>
       </div>
 
-      <div className="text-center mt-8 lg:mt-12">
-        <h1 className="text-3xl lg:text-5xl font-bold text-gray-800">
+      <div className="text-center mt-8 lg:mt-12 h-16 m-6">
+        <h1 className="text-3xl lg:text-5xl font-bold text-black">
           <TypingEffect
-            text={['Your AI Interior Designer']} 
+            text={['Introducing Your AI Interior Designer']}
             speed={100} // Typing speed
             eraseSpeed={100} // Speed for erasing text
             eraseDelay={2000} // Delay before erasing starts

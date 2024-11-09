@@ -1,29 +1,32 @@
-import React, { createContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect, useContext } from 'react';
+import { useAuth } from '@clerk/clerk-react'; // Use the Clerk useAuth hook
 
-// Create the AuthContext with default value
 export const AuthContext = createContext();
 
-// Create the AuthProvider component to provide auth state
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(() => {
-        // Retrieve login state from localStorage
-        const storedLoginState = localStorage.getItem('isLoggedIn');
-        return storedLoginState === 'true'; // If 'true', user is logged in, otherwise false
-    });
+    const { isSignedIn, isLoaded } = useAuth(); // Clerk's authentication hooks
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Start with false until we know the status
 
     useEffect(() => {
-        // Update localStorage whenever the login state changes
-        localStorage.setItem('isLoggedIn', isLoggedIn);
-    }, [isLoggedIn]);
+        if (isLoaded) {
+            if (isSignedIn) {
+                setIsLoggedIn(true);
+                localStorage.setItem('isLoggedIn', 'true');
+            } else {
+                setIsLoggedIn(false);
+                localStorage.setItem('isLoggedIn', 'false');
+            }
+        }
+    }, [isSignedIn, isLoaded]); // Only depend on isSignedIn and isLoaded
 
-    // Function to log in and set the auth state
     const login = () => {
         setIsLoggedIn(true);
+        localStorage.setItem('isLoggedIn', 'true');
     };
 
-    // Function to log out and reset the auth state
     const logout = () => {
         setIsLoggedIn(false);
+        localStorage.setItem('isLoggedIn', 'false');
     };
 
     return (

@@ -31,7 +31,7 @@ const Signup = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-blue-500">
-            <SignUp path="/signup" routing="path" signUpUrl="/signup" />
+            <SignUp path="/sign-up" routing="path" signUpUrl="/sign-up" />
         </div>
     );
 };

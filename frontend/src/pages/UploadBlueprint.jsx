@@ -41,7 +41,7 @@ const UploadBlueprint = () => {
                 });
                 console.log("Upload success");
             } else if (!isLoggedIn) {
-                navigate("/login");
+                navigate("/sign-in");
             }
         } catch (error) {
             console.error("File selection was canceled or failed:", error);
