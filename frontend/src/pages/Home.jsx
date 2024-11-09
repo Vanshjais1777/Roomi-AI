@@ -7,7 +7,7 @@ import sample3 from '../assets/sample-3.png';
 import redesignImg from '../assets/Redesign_Image.png';
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../context/AuthContext';
 import TypingEffect from 'react-typing-effect'; // Import the typing effect library
 
 const Home = () => {

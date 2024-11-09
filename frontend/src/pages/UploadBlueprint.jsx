@@ -10,7 +10,7 @@ import tribal from '../assets/tribal.png';
 import tropical from '../assets/tropical.png';
 import vintage from '../assets/vintage.png';
 import NavBar from '../components/NavBar';
-import { AuthContext } from '../context/authContext';
+import { AuthContext } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { BackendUrlContext } from '../context/BackendUrlContext';
