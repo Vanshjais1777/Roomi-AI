@@ -36,29 +36,28 @@ const UploadBlueprint = () => {
             const formData = new FormData();
             formData.append('image', file);
 
-            await axios.post(`${backendUrl}/api/uploads/uploadBp`, formData, {
-                headers: { 'Content-Type': 'multipart/form-data' },
-            });
+            const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, { roomType, themes: selectedThemes });
+            setSuggestion(response.data.suggestion);
             console.log("Image uploaded successfully");
         } catch (error) {
             console.error("Error during file upload:", error);
         }
     };
 
-    const fetchSuggestion = async () => {
-        if (!roomType || selectedThemes.length === 0) return;
+    // const fetchSuggestion = async () => {
+    //     if (!roomType || selectedThemes.length === 0) return;
 
-        try {
-            const response = await axios.post(`${backendUrl}/api/generate-design`, { roomType, themes: selectedThemes });
-            setSuggestion(response.data.suggestion);
-        } catch (error) {
-            console.error("Error fetching design suggestions:", error);
-        }
-    };
+    //     try {
+    //         const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, { roomType, themes: selectedThemes });
+    //         setSuggestion(response.data.suggestion);
+    //     } catch (error) {
+    //         console.error("Error fetching design suggestions:", error);
+    //     }
+    // };
 
-    useEffect(() => {
-        fetchSuggestion();
-    }, [roomType, selectedThemes]);
+    // useEffect(() => {
+    //     fetchSuggestion();
+    // }, [roomType]);
 
     const handleThemeSelect = (theme) => {
         if (selectedThemes.includes(theme)) {
