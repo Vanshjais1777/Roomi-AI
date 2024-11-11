@@ -34,9 +34,15 @@ const UploadBlueprint = () => {
             });
             const file = await fileHandle.getFile();
             const formData = new FormData();
-            formData.append('image', file);
+            formData.append('file', file);
+            formData.append('roomType', roomType);
+            formData.append('themes', JSON.stringify(selectedThemes)); // Convert array to string
 
-            const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, { roomType, themes: selectedThemes });
+            const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            });
             setSuggestion(response.data.suggestion);
             console.log("Image uploaded successfully");
         } catch (error) {
