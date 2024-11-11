@@ -1,30 +1,30 @@
-import cloudinary from '../config/cloudinary.js';
+import axios from "axios";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const uploadBp = async (req, res) => {
+    const { roomType, themes } = req.body;
+
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: 'No file uploaded' });
-        }
-
-        // Upload the file to Cloudinary
-        const result = cloudinary.uploader.upload_stream(
-            { folder: 'blueprints' },
-            (error, result) => {
-                if (error) return res.status(500).json({ error: 'Upload to Cloudinary failed' });
-
-                // Success response with Cloudinary URL
-                res.status(200).json({
-                    message: 'File uploaded successfully',
-                    url: result.secure_url,
-                    public_id: result.public_id,
-                });
+        const aiResponse = await axios.post(
+            'https://api.openai.com/v1/images/generations', // Updated endpoint for image generation
+            {
+                prompt: `Generate a ${roomType} design with themes: ${themes}.`,
+                n: 1, // Number of images you want to generate
+                size: "1024x1024" // Set desired image resolution (e.g., "1024x1024")
+            },
+            {
+                headers: {
+                    'Authorization': `Bearer ${process.env.OPEN_AI_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
             }
         );
 
-        // Pipe the file buffer into Cloudinary stream
-        result.end(req.file.buffer);
-
+        res.json({ imageUrl: aiResponse.data.data[0].url }); // Sends the image URL in response
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.error("AI API error:", error);
+        res.status(500).send("Failed to generate design suggestions.");
     }
 };

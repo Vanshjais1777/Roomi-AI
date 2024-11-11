@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js';
 import userRouter from './routes/userRouter.js';
 import uploadRouter from './routes/uploadRouter.js'
+
 dotenv.config();
 
 const app = express();
@@ -25,7 +26,7 @@ app.use(cors(
 
 // API EndPoints
 app.use('/api/users', userRouter);
-app.use('/api/uploads', uploadRouter)
+app.use('/api/uploads', uploadRouter);
 
 app.get('/', (req, res) => {
     res.send('Server is running');
