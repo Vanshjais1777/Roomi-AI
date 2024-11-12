@@ -24,46 +24,22 @@ const UploadBlueprint = () => {
     const [selectedThemes, setSelectedThemes] = useState([]);
     const [suggestion, setSuggestion] = useState("");
 
-    const handleFileUpload = async () => {
+    const fetchSuggestion = async () => {
         if (!isLoggedIn) return navigate("/sign-in");
+        if (!roomType || selectedThemes.length === 0) return; // Ensure input is provided
 
         try {
-            const [fileHandle] = await window.showOpenFilePicker({
-                types: [{ description: 'Image Files', accept: { 'image/*': ['.png', '.jpg', '.jpeg'] } }],
-                multiple: false,
-            });
-            const file = await fileHandle.getFile();
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('roomType', roomType);
-            formData.append('themes', JSON.stringify(selectedThemes)); // Convert array to string
-
-            const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
+            // Send room type and themes to backend to get design suggestions
+            const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, {
+                roomType,
+                themes: selectedThemes,
             });
             setSuggestion(response.data.suggestion);
-            console.log("Image uploaded successfully");
+            console.log("Suggestion fetched successfully");
         } catch (error) {
-            console.error("Error during file upload:", error);
+            console.error("Error fetching design suggestion:", error);
         }
     };
-
-    // const fetchSuggestion = async () => {
-    //     if (!roomType || selectedThemes.length === 0) return;
-
-    //     try {
-    //         const response = await axios.post(`${backendUrl}/api/uploads/uploadBp`, { roomType, themes: selectedThemes });
-    //         setSuggestion(response.data.suggestion);
-    //     } catch (error) {
-    //         console.error("Error fetching design suggestions:", error);
-    //     }
-    // };
-
-    // useEffect(() => {
-    //     fetchSuggestion();
-    // }, [roomType]);
 
     const handleThemeSelect = (theme) => {
         if (selectedThemes.includes(theme)) {
@@ -77,15 +53,7 @@ const UploadBlueprint = () => {
         <div className="min-h-screen bg-gradient-to-tr from-blue-300 via-teal-100 to-blue-300">
             <NavBar />
             <div className="m-4 md:w-3/4 lg:w-1/2 xl:w-1/3 mx-auto text-center">
-                <h2 className="text-3xl font-bold text-blue-600 mb-4">Upload a Photo of Your Room</h2>
-                <div className="p-8 border border-gray-300 rounded-lg bg-gray-50 shadow-lg">
-                    <button
-                        className="w-full px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-md hover:bg-blue-700 transition-all duration-200"
-                        onClick={handleFileUpload}
-                    >
-                        Upload Image
-                    </button>
-                </div>
+                <h2 className="text-3xl font-bold text-blue-600 mb-4">Select Room Type and Themes</h2>
 
                 <div className="w-full mt-8">
                     <h3 className="text-xl font-semibold text-gray-800">Select Room Type</h3>
@@ -124,6 +92,15 @@ const UploadBlueprint = () => {
                 </div>
 
                 <p className="mt-4 text-lg">Selected Themes: {selectedThemes.join(", ") || "None"}</p>
+
+                <div className="w-full mt-8">
+                    <button
+                        className="w-full px-6 py-3 bg-blue-600 text-white text-lg font-semibold rounded-md hover:bg-blue-700 transition-all duration-200"
+                        onClick={fetchSuggestion}
+                    >
+                        Get AI-Generated Design Suggestion
+                    </button>
+                </div>
 
                 <div className="w-full mt-8 text-center">
                     <h2 className="text-2xl font-semibold text-gray-800">AI-Generated Design Suggestion</h2>

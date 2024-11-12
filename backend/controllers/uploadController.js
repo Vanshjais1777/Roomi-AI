@@ -1,30 +1,46 @@
-import axios from "axios";
-import dotenv from 'dotenv';
+import axios from 'axios';
+import fs from 'fs';
+import dotenv from "dotenv";
 
 dotenv.config();
+const apiKey = process.env.STABILITY_AI_API_KEY;
 
-export const uploadBp = async (req, res) => {
-    const { roomType, themes } = req.body;
+console.log('API Key:', apiKey);  // Ensure the API key is loaded properly
+
+const generateImage = async (prompt) => {
+    const url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2";
 
     try {
-        const aiResponse = await axios.post(
-            'https://api.openai.com/v1/images/generations', // Updated endpoint for image generation
-            {
-                prompt: `Generate a ${roomType} design with themes: ${themes}.`,
-                n: 1, // Number of images you want to generate
-                size: "1024x1024" // Set desired image resolution (e.g., "1024x1024")
-            },
+        console.log("Sending request with URL:", url);
+        console.log("Request Headers:", {
+            Authorization: `Bearer ${apiKey}`,
+        });
+        console.log("Request Body:", { inputs: prompt });
+
+        const response = await axios.post(
+            url,
+            { inputs: prompt },
             {
                 headers: {
-                    'Authorization': `Bearer ${process.env.OPEN_AI_API_KEY}`,
-                    'Content-Type': 'application/json'
+                    Authorization: `Bearer ${apiKey}`,
                 },
+                responseType: "arraybuffer",
             }
         );
 
-        res.json({ imageUrl: aiResponse.data.data[0].url }); // Sends the image URL in response
+        fs.writeFileSync("generated_image.png", response.data);
+        console.log("Image saved as generated_image.png");
+
     } catch (error) {
-        console.error("AI API error:", error);
-        res.status(500).send("Failed to generate design suggestions.");
+        console.error("Error generating image:", error.response ? error.response.data : error.message);
+        if (error.response && error.response.data) {
+            console.log("Raw error response data:", JSON.stringify(error.response.data, null, 2));
+        }
     }
+};
+
+export const uploadBp = async (req, res) => {
+    const { roomType, themes } = req.body;
+    const prompt = `Generate a ${roomType} design with themes: ${themes}.`;
+    generateImage(prompt);
 };
